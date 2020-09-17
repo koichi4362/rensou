@@ -1,0 +1,38 @@
+
+body{
+ background-image:url("43483.jpg");
+}
+
+#topBar{
+ text-align:center;
+ float:top
+ width:100%;
+}
+
+.buttons{
+ margin-top:30px;
+ margin-bottom:30px;
+}
+
+.buttons input{
+ margin-right:30px;
+}
+
+.common{
+ float:left;
+}
+
+.textbox{
+ padding:5px 10px;
+ margin:10px 0px;
+ border: 5px double orange;
+ background-color:#fcf1e3;
+}
+
+.kurosenn{
+ padding-top:15px;
+}
+
+.add{
+ padding-top:12px;
+}
