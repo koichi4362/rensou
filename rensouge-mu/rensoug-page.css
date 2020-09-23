@@ -1,44 +1,64 @@
 
 html{
- height:100%;
+	height:100%;
 }
 
 body {
- height:100%;
- background-image:url("43483.jpg");
+	overflow:scroll;
+	height:100%;
+	background-image:url("43483.jpg");
 }
 
 #topBar{
- text-align:center;
- float:top
- width:100%;
+	text-align:center;
+	width:100%;
 }
 
 #sideMenu {
- height:100%;
- width:100px;
- margin:0px;
- padding-right:35px;
- float:left;
- text-align:center;
- border-right:1px solid gray;
+	box-sizing: border-box; 
+	height:100%;
+	width:15%;
+	margin:0px;
+	padding-right:35px;
+	float:left;
+	text-align:center;
+	border-right:1px solid gray;
 }
 
 #sideMenu ul{
- padding-left:10px;
+	padding-left:10px;
 }
 
 #sideMenu ul li{
- list-style:none;
- padding-top:10px;
- clear:left;
+	list-style:none;
+	padding-top:10px;
+	clear:left;
+}
+
+#sideMenu ul li a{
+	border-left:6px solid skyblue;
+	padding-left:3px;
+	padding-top:7px;
+	text-decoration:none;
 }
 
 .menyu-{
- font-size:large;
+	font-size:large;
 }
 
 #sideMenu .contentsList{
- float:left;
- padding-bottom:10px;
+	float:left;
+	padding-bottom:10px;
+}
+
+main{
+	box-sizing: border-box; 
+	float:left;
+	width:80%;
+}
+
+.clearfix::after{
+	content:"";
+	display:block;
+	clear:both;
 }

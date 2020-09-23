@@ -1,22 +1,22 @@
 
-.howto{
+main{
  margin-top:20px;
  margin-left:15px;
- position:ralative;
 }
 
-.howto h1{
+main h1{
  text-align:center;
 }
 
-.howto div{
- clear:left;
+main div{
+ clear:both;
 }
 
 .ss{
- height:100px;
+ text-align:top;
+ float:left;
+ height:150px;
  width:auto;
  margin:10px;
  border-bottom:1px dashed gray;
- float:left;
 }
