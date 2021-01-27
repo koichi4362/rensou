@@ -1,0 +1,47 @@
+#userNameBlock {
+	margin-left: 20px;
+}
+
+#buttonsBlock {
+	margin-right: 30px;
+	margin-top: 20px;
+}
+
+.button {
+	text-align: center;
+	width: 150px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	border: solid 2px orange;
+	background: white;
+	width: 150px;
+}
+
+.button a {
+	text-decoration: none;
+}
+
+#manageAccountLink {
+	margin-left: 20px;
+}
+
+#userSheets {
+	margin-top: 30px;
+	margin-left: 20px;
+}
+
+.sheet {
+	text-align: center;
+	margin-left: 100px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	width: 200px;
+	padding: 10px 20px;
+	border: 2px solid lightgreen;
+	border-radius: 5px;
+	background: white;
+}
+
+.sheet a {
+	text-decoration: none;
+}
