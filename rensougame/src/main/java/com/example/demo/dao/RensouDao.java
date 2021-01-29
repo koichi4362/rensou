@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.Entity.Node;
 import com.example.demo.Entity.RensouForm;
 import com.example.demo.Entity.Sheet;
+import com.example.demo.Entity.SheetForm;
 import com.example.demo.Entity.User;
 import com.example.demo.Entity.UserForm;
 
@@ -89,7 +90,7 @@ public class RensouDao {
 		MapSqlParameterSource param = new MapSqlParameterSource();
 		String createSheetSql = "INSERT INTO sheets(user_id , sheet_name) VALUES( :user_id , :sheet_name )";
 		param.addValue("user_id", rensouForm.getUser_id());
-		param.addValue("sheet_name", rensouForm.getSheet_name());
+		param.addValue("sheet_name", "新しいシート");
 		jdbcTemplate.update(createSheetSql, param);
 
 		String findNewSheet = "SELECT MAX(sheet_id)AS sheet_id FROM sheets";
@@ -145,11 +146,57 @@ public class RensouDao {
 		return list;
 	}
 
+	public String getSheetNameFormSheetId(int sheet_id) {
+		MapSqlParameterSource param = new MapSqlParameterSource();
+		String getSheetNameSql = "SELECT sheet_name FROM sheets WHERE sheet_id = :sheet_id";
+		param.addValue("sheet_id", sheet_id);
+		List<Sheet> list = jdbcTemplate.query(getSheetNameSql, param, new BeanPropertyRowMapper<Sheet>(Sheet.class));
+		return list.get(0).getSheet_name();
+	}
+
 	public List<Sheet> getSheetList(int user_id) {
 		MapSqlParameterSource param = new MapSqlParameterSource();
 		String getSheetListSql = "SELECT sheet_id , user_id , sheet_name , public_flag FROM sheets WHERE user_id = :user_id ORDER BY created_at";
 		param.addValue("user_id", user_id);
 		return jdbcTemplate.query(getSheetListSql, param, new BeanPropertyRowMapper<Sheet>(Sheet.class));
+	}
+
+	public void updateSheetName(SheetForm sheetForm) {
+		MapSqlParameterSource param = new MapSqlParameterSource();
+		String updateSheetNameSql = "UPDATE sheets SET sheet_name = :sheet_name WHERE sheet_id = :sheet_id ";
+		param.addValue("sheet_name", sheetForm.getSheet_name());
+		param.addValue("sheet_id", sheetForm.getSheet_id());
+		jdbcTemplate.update(updateSheetNameSql, param);
+	}
+
+	public Integer getPublicFlag(int sheet_id) {
+		MapSqlParameterSource param = new MapSqlParameterSource();
+		String getPublicFlagSql = "SELECT public_flag FROM sheets WHERE sheet_id = :sheet_id";
+		param.addValue("sheet_id", sheet_id);
+		List<Sheet> list = jdbcTemplate.query(getPublicFlagSql, param, new BeanPropertyRowMapper<Sheet>(Sheet.class));
+		return list.get(0).getPublic_flag();
+	}
+
+	public void switchPublicFlag(int sheet_id, int public_flag) {
+		MapSqlParameterSource param = new MapSqlParameterSource();
+		String switchPublicFlagSql = "UPDATE sheets SET public_flag = :public_flag WHERE sheet_id = :sheet_id";
+		param.addValue("public_flag", public_flag);
+		param.addValue("sheet_id", sheet_id);
+		jdbcTemplate.update(switchPublicFlagSql, param);
+	}
+
+	public String getUserNameByUserId(int user_id) {
+		MapSqlParameterSource param = new MapSqlParameterSource();
+		String getUserNameSql = "SELECT user_name FROM users WHERE user_id = :user_id";
+		param.addValue("user_id", user_id);
+		List<User> list = jdbcTemplate.query(getUserNameSql, param, new BeanPropertyRowMapper<User>(User.class));
+		return list.get(0).getUser_name();
+	}
+
+	public List<Sheet> getPublicSheets() {
+		String getPublicSheetsSql = "SELECT sheet_id , user_id , sheet_name FROM sheets WHERE public_flag = 1 ORDER BY public_date";
+		List<Sheet> list = jdbcTemplate.query(getPublicSheetsSql, new BeanPropertyRowMapper<Sheet>(Sheet.class));
+		return list;
 	}
 
 }

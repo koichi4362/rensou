@@ -1,7 +1,5 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.example.demo.Entity.Node;
 import com.example.demo.Entity.RensouForm;
-import com.example.demo.Entity.Sheet;
+import com.example.demo.Entity.SheetForm;
 import com.example.demo.Entity.User;
 import com.example.demo.Entity.UserForm;
 import com.example.demo.exception.CreateAccountException;
 import com.example.demo.exception.EditAccountException;
 import com.example.demo.exception.LoginException;
+import com.example.demo.exception.SwitchPublicFlagException;
 import com.example.demo.service.RensouService;
 
 @Controller
@@ -87,7 +85,7 @@ public class RensouController {
 			return "rensou_login";
 		} catch (Exception e) {
 			e.printStackTrace();
-			model.addAttribute("msg", "エラーが発生しました。");
+			model.addAttribute("msg", "エラーが発生しました");
 			return "rensou_login";
 		}
 	}
@@ -100,26 +98,19 @@ public class RensouController {
 
 	@RequestMapping("/mypage")
 	public String mypage(@ModelAttribute("loginUser") User loginUser, Model model) {
+		if (loginUser == null) {
+			model.addAttribute("msg", "ログイン情報がありません。もう一度ログインしてください");
+			return login(model);
+		}
 		try {
-			List<Sheet> sheetList = rensouService.getSheetList(loginUser);
-			String json = "{\"sheet_list\":[";
-			for (int i = 0; i < sheetList.size(); i++) {
-				json = json + " { "
-						+ " \"sheet_name\" : \"" + sheetList.get(i).getSheet_name()
-						+ "\" , \"sheet_id\" : \"" + sheetList.get(i).getSheet_id() +
-						"\" } ";
-				if (i != sheetList.size() - 1) {
-					json = json + ",";
-				}
-			}
-			json = json + "]}";
-			model.addAttribute("json", json);
-			return "rensou_mypage";
+			model.addAttribute("json", rensouService.getJsonMySheets(loginUser));
+			model.addAttribute("sheet", new SheetForm());
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("msg", "エラーが発生しました");
 			return top();
 		}
+		return "rensou_mypage";
 	}
 
 	@RequestMapping("/editAccount")
@@ -134,6 +125,7 @@ public class RensouController {
 		try {
 			rensouService.doEditAccount(form, loginUser);
 			model.addAttribute("loginUser", rensouService.refreshLoginUser(loginUser));
+			model.addAttribute("msg", "アカウント情報を変更しました！");
 			return mypage(loginUser, model);
 		} catch (EditAccountException eae) {
 			eae.printStackTrace();
@@ -143,40 +135,41 @@ public class RensouController {
 	}
 
 	@RequestMapping("noSheetGame")
-	public String game() {
+	public String game(Model model) {
+		model.addAttribute("rensou", new RensouForm());
 		return "rensougame";
 	}
 
 	@RequestMapping("/openSheetGame")
-	public String openSheet(@RequestParam("sheet_id") int sheet_id, @ModelAttribute("loginUser") User loginUser,
+	public String openSheet(@RequestParam("sheet_id") Integer sheet_id, @ModelAttribute("loginUser") User loginUser,
 			@ModelAttribute("form") RensouForm rensouForm,
 			Model model) {
-		List<Node> eNodeList = rensouService.openSheet(sheet_id);
-		String json = "{\"node_list\":[";
-		for (int i = 0; i < eNodeList.size(); i++) {
-			json = json + " { "
-					+ " \"node_name\" : \"" + eNodeList.get(i).getNode_name()
-					+ "\" , \"node_id\" : \"" + eNodeList.get(i).getNode_id() +
-					"\" } ";
-			if (i != eNodeList.size() - 1) {
-				json = json + ",";
-			}
+		if (sheet_id != 0) {
+			rensouForm.setSheet_name(rensouService.getSheetNameFormSheetId(sheet_id));
+			String json = rensouService.createJsonNodesData(sheet_id);
+			model.addAttribute("json", json);
 		}
-		json = json + "]}";
-		model.addAttribute("json", json);
-
 		rensouForm.setSheet_id(sheet_id);
 		rensouForm.setUser_id(loginUser.getUser_id());
 		model.addAttribute("rensou", rensouForm);
 		return "rensougame";
 	}
 
+	@RequestMapping("viewSheet")
+	public String viewSheet(@RequestParam("sheet_id") int sheet_id, Model model) {
+		String json = rensouService.createJsonNodesData(sheet_id);
+		model.addAttribute("json", json);
+		model.addAttribute("sheet_name", rensouService.getSheetNameFormSheetId(sheet_id));
+		return "rensouview";
+	}
+
 	@RequestMapping(value = "/saveSheet", method = RequestMethod.POST)
-	public String saveSheet(@ModelAttribute("form") RensouForm rensouForm, Model model) {
+	public String saveSheet(@ModelAttribute("form") RensouForm rensouForm, @ModelAttribute("loginUser") User loginUser,
+			Model model) {
 		try {
 			rensouService.saveSheet(rensouForm);
 			model.addAttribute("msg", "シートを保存しました!");
-			return "rensou_mypage";
+			return mypage(loginUser, model);
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("msg", "保存に失敗しました");
@@ -184,4 +177,48 @@ public class RensouController {
 			return "rensougame";
 		}
 	}
+
+	@RequestMapping("/updateSheetName")
+	public String updateSheetName(@ModelAttribute("sheet") SheetForm sheetForm,
+			@ModelAttribute("loginUser") User loginUser, Model model) {
+		rensouService.updateSheetName(sheetForm);
+		model.addAttribute("msg", "シート名を変更しました！");
+		return mypage(loginUser, model);
+	}
+
+	@RequestMapping("/switchPublicFlag")
+	public String switchPublicFlag(@ModelAttribute("sheet") SheetForm sheetForm,
+			@ModelAttribute("loginUser") User loginUser, Model model) {
+		try {
+			sheetForm = rensouService.switchPublicFlag(sheetForm);
+		} catch (SwitchPublicFlagException spfe) {
+			model.addAttribute("msg", spfe.getMessage());
+			return mypage(loginUser, model);
+		} catch (Exception e) {
+			model.addAttribute("msg", "シートの公開に失敗しました");
+			e.printStackTrace();
+			return mypage(loginUser, model);
+		}
+		String returnMessage = "";
+		if (sheetForm.getPublic_flag() == 0) {
+			returnMessage = sheetForm.getSheet_name() + " を非公開にしました";
+		} else if (sheetForm.getPublic_flag() == 1) {
+			returnMessage = sheetForm.getSheet_name() + " を公開しました！";
+		}
+		model.addAttribute("msg", returnMessage);
+		return mypage(loginUser, model);
+	}
+
+	@RequestMapping("/public_sheets")
+	public String public_sheets(Model model) {
+		try {
+			model.addAttribute("json", rensouService.getJsonPublicSheets());
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("msg", "エラーが発生しました");
+			return top();
+		}
+		return "rensou_public_sheets";
+	}
+
 }

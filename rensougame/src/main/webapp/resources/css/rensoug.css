@@ -20,6 +20,9 @@ body {
 }
 
 .textbox {
+	text-align: center;
+	width: 170px;
+	height: 25px;
 	padding: 5px 10px;
 	margin: 10px 0px;
 	border: 5px double orange;

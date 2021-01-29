@@ -29,10 +29,18 @@
 		</div>
 		<c:if test="${not empty sessionScope.loginUser}">
 			<div class="button">
-				<!-- ajaxでシート名変更したい -->
-				<h2 class="sheetName">シート名</h2>
-				<a class="henkou">${rensou.sheet_name}</a>
+
+				<c:choose>
+					<c:when test="${not empty rensou.sheet_name}">
+						<h2 class="sheetName">${rensou.sheet_name}</h2>
+					</c:when>
+					<c:otherwise>
+						<h2 class="sheetName">新しいシート</h2>
+					</c:otherwise>
+				</c:choose>
+
 			</div>
+
 		</c:if>
 	</div>
 	<form:form action="saveSheet" modelAttribute="rensou" method="POST">
@@ -46,8 +54,6 @@
 				<button>連想ボックスを保存</button>
 			</div>
 		</c:if>
-
-		<!-- jsでdivとdivの間に要素を追加するため二重にしてる -->
 		<div class="common" id="box" hidden>
 			<div class="textbox common">
 				<input type="text" autocomplete="off">

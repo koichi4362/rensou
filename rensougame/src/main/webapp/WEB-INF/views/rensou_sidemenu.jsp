@@ -25,7 +25,7 @@
 				</p></li>
 			<li><a href="top" class="contentsList">TOP</a></li>
 			<li><a href="howto" class="contentsList">遊び方</a></li>
-			<li><a href="public_bord" class="contentsList">投稿一覧</a></li>
+			<li><a href="public_sheets" class="contentsList">投稿一覧</a></li>
 			<c:choose>
 				<c:when test="${not empty sessionScope.loginUser}">
 					<li><a href="mypage" class="contentsList">マイページ</a></li>

@@ -16,13 +16,27 @@
 			<div id="topInfo">連想ゲームへようこそ！！</div>
 			<div id="topMenu">
 				<ul>
-					<li><a href="noSheetGame" class="contentsList">スタート</a></li>
+					<c:choose>
+						<c:when test="${not empty sessionScope.loginUser}">
+							<li><a href="openSheetGame?sheet_id=0"
+								class="contentsList">スタート</a></li>
+						</c:when>
+						<c:otherwise>
+							<li><a href="noSheetGame" class="contentsList">スタート</a></li>
+						</c:otherwise>
+					</c:choose>
 					<li><a href="howto" class="contentsList">遊び方</a></li>
-					<li><a href="public_bord" class="contentsList">投稿一覧</a></li>
+					<li><a href="public_sheets" class="contentsList">投稿一覧</a></li>
 					<li><a href="createAccount" class="contentsList">アカウント新規作成</a></li>
-					<c:if test="${not empty sessionScope.loginUser}">
-						<li><a href="mypage" class="contentsList">マイページ</a></li>
-					</c:if>
+					<c:choose>
+						<c:when test="${not empty sessionScope.loginUser}">
+							<li><a href="mypage" class="contentsList">マイページ</a></li>
+							<li><a href="doLogout" class="contentsList">ログアウト</a></li>
+						</c:when>
+						<c:otherwise>
+							<li><a href="login" class="contentsList">ログイン</a></li>
+						</c:otherwise>
+					</c:choose>
 				</ul>
 			</div>
 		</div>

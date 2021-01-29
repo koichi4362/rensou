@@ -1,0 +1,23 @@
+@charset "UTF-8";
+
+.publicSheet {
+	text-align: center;
+	margin-left: 100px;
+	margin-top: 5px;
+	margin-bottom: 30px;
+	height: 30px;
+	width: 200px;
+	padding: 10px 20px;
+	border: 2px solid orange;
+	border-radius: 5px;
+	background: white;
+}
+
+.publicSheet a {
+	text-decoration: none;
+}
+
+.madeBy {
+	text-align: left;
+	width: 230px;
+}

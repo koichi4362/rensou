@@ -1,0 +1,27 @@
+
+main{
+	margin-top:30px;
+	text-align:center;
+}
+
+#contents{
+	clear:both;
+}
+
+#topInfo{
+	font-size: 35px;
+}
+
+#topMenu ul li{
+	list-style:none;
+	padding-top:20px;
+}
+
+#topMenu ul li a{
+	text-decoration:none;
+	margin:5px auto;
+	border-left:2px solid skyblue;
+	border-bottom:1px solid skyblue;
+	width:120px;
+	display:block;
+}

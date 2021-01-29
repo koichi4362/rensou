@@ -1,0 +1,26 @@
+
+main{
+	margin-top:30px;
+}
+
+h1{
+	text-align:center;
+}
+
+.contents{
+	width:500px;
+	margin:0 auto;
+	padding:20px;
+	border:2px solid orange;
+	border-radius:30px;
+	border-top:none;
+}
+
+.koumoku{
+	margin-right:20px;
+	margin-top:20px;
+}
+
+.hozon{
+	 margin-top:50px;
+}

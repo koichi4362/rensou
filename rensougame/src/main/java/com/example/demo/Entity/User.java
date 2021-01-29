@@ -22,8 +22,8 @@ public class User {
 
 	}
 
-	public String getUser_id() {
-		return user_id;
+	public Integer getUser_id() {
+		return Integer.parseInt(user_id);
 	}
 
 	public void setUser_id(String user_id) {
