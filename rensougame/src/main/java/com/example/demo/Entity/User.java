@@ -1,12 +1,6 @@
-/**
- *
- */
+
 package com.example.demo.Entity;
 
-/**
- * @author user
- *
- */
 public class User {
 
 	private String user_id;
@@ -54,8 +48,8 @@ public class User {
 		this.passwd = passwd;
 	}
 
-	public String getUser_role() {
-		return user_role;
+	public Integer getUser_role() {
+		return Integer.parseInt(user_role);
 	}
 
 	public void setUser_role(String user_role) {

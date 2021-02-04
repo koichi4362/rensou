@@ -7,6 +7,15 @@ public class Sheet {
 	private Integer last_node_id;
 	private String sheet_name;
 	private Integer public_flag;
+	private Integer good_count;
+
+	public Integer getGood_count() {
+		return good_count;
+	}
+
+	public void setGood_count(Integer good_count) {
+		this.good_count = good_count;
+	}
 
 	public Integer getSheet_id() {
 		return sheet_id;

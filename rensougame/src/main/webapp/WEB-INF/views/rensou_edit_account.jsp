@@ -9,6 +9,7 @@
 <title>アカウント編集-連想ゲーム</title>
 <link rel="stylesheet" href="resources/css/rensoug-page.css"></link>
 <link rel="stylesheet" href="resources/css/rensoug-form.css"></link>
+<script src="resources/js/form.js"></script>
 </head>
 <body>
 	<%@include file="rensou_header.jsp"%>
@@ -23,14 +24,17 @@
 			<p class="koumoku">
 				ユーザー名
 				<form:input path="user_name" />
+				<form:errors path="user_name" cssStyle="color: red" />
 			</p>
 			<p class="koumoku">
 				メールアドレス
 				<form:input path="e_mail" />
+				<form:errors path="e_mail" cssStyle="color: red" />
 			</p>
 			<p class="koumoku">
 				パスワード
-				<form:password path="passwd" />
+				<form:password path="passwd" oninput="CheckPassword(this)" />
+				<form:errors path="passwd" cssStyle="color: red" />
 			</p>
 			<p>
 				<button>変更する</button>

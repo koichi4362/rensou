@@ -16,11 +16,10 @@ function getMySheet(json) {
 			sheetNameForm.children('.buttonOfSheet').children('.sheetNameBtn').attr('id', 'sheetNameBtn' + id);
 			sheetNameForm.children('.buttonOfSheet').children('.switchPublicBtn').attr('id', 'switchPublicBtn' + id);
 			sheetNameForm.children('.buttonOfUpdateSheetName').attr('id', 'buttonOfUpdateSheetName' + id);
-			if (sheetList[i].public_flag === 0) {
-				$('#switchPublicBtn' + id).text("公開する");
-			}
-			if (sheetList[i].public_flag === 1) {
+			if (sheetList[i].public_flag === 1)  {
 				$('#switchPublicBtn' + id).text("公開中止");
+			}else{
+				$('#switchPublicBtn' + id).text("公開する");
 			}
 		}
 	});
@@ -28,7 +27,7 @@ function getMySheet(json) {
 
 //シート名変更フォーム表示
 function updateSheetName(id) {
-	cancelUpdateName()
+	cancelUpdateName();
 	id = id.replace(/[^0-9]/g, '');
 	$('#inputId' + id).removeAttr('type');
 	$('#sheetLinkId' + id).hide();

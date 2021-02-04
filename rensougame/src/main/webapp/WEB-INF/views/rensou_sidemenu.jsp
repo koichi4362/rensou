@@ -8,11 +8,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<!-- <div>${pageContext.request.contextPath}</div>
-	<c:if test="${pageContext.request.requestURL != \"/rensou_top.jsp\"}">
-		</c:if>
-	-->
-
 	<div id="sideMenu">
 		<c:if test="${not empty sessionScope.loginUser}">
 			<p>

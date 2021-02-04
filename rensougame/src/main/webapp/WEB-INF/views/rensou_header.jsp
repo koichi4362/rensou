@@ -10,8 +10,7 @@
 </head>
 <body>
 	<div id="topBar">
-		<img src="resources/images/topimg.jpg">
-		<!-- 上部タイトル画像 -->
+		<a href="top"><img src="resources/images/topimg.jpg"></a>
 	</div>
 	<c:if test="${not empty msg }">
 		<p>${msg}</p>

@@ -1,0 +1,29 @@
+.linksBlock {
+	margin: 0 auto;
+	margin-top: 50px;
+	position: relative;
+	text-align: center;
+}
+
+.link {
+	border: solid 5px lightgreen;
+	border-radius: 5px;
+	width: 250px;
+	height: 50px;
+	margin: 0 auto;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	position: relative;
+	margin: 20px auto;
+}
+
+.link a {
+	line-height: 50px;
+	text-align: center;
+	text-decoration: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}

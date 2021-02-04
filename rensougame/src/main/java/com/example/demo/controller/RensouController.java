@@ -1,9 +1,10 @@
 package com.example.demo.controller;
 
-import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,7 +23,7 @@ import com.example.demo.exception.SwitchPublicFlagException;
 import com.example.demo.service.RensouService;
 
 @Controller
-@SessionAttributes(types = { User.class, JSONArray.class })
+@SessionAttributes(types = User.class)
 public class RensouController {
 
 	@Autowired
@@ -45,22 +46,28 @@ public class RensouController {
 	}
 
 	@RequestMapping(value = "/doCreateAccount", method = RequestMethod.POST)
-	public String doCreateAccount(@ModelAttribute(name = "user") UserForm form, Model model) {
+	public String doCreateAccount(@Validated @ModelAttribute(name = "user") UserForm form, BindingResult bindingResult,
+			Model model) {
 		try {
+			if (bindingResult.hasErrors()) {
+				model.addAttribute("msg", "入力情報にエラーがあります");
+				return "rensou_newaccount";
+			}
 			rensouService.doCreateAccount(form);
 			User loginUser = rensouService.doLogin(form);
 			model.addAttribute("loginUser", loginUser);
-			return "rensou_create_success";
+			model.addAttribute("msg", "アカウントを作成しました！");
+			return mypage(loginUser, model);
 		} catch (CreateAccountException cae) {
 			model.addAttribute("msg", cae.getMessage());
-			return "rensou_newaccount";
+			return createAccount(model);
 		} catch (LoginException le) {
 			model.addAttribute("msg", le.getMessage());
-			return "rensou_newaccount";
+			return createAccount(model);
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("msg", "エラーが発生しました");
-			return "rensou_newaccount";
+			return createAccount(model);
 		}
 	}
 
@@ -71,29 +78,36 @@ public class RensouController {
 	}
 
 	@RequestMapping(value = "/doLogin", method = RequestMethod.POST)
-	public String dologin(@ModelAttribute(name = "user") UserForm form, Model model) {
+	public String dologin(@Validated @ModelAttribute(name = "user") UserForm form, BindingResult bindingResult,
+			Model model) {
 		try {
 			User loginUser = rensouService.doLogin(form);
 			if (loginUser == null) {
 				model.addAttribute("msg", "パスワードが違います");
-				return "rensou_login";
+				return login(model);
+			}
+			if (loginUser.getUser_role() != 1) {
+				System.out.println("管理者ユーザーがプレイヤーユーザーとしてログインしようとしました。");
+				model.addAttribute("msg", "ログインに失敗しました。");
+				return login(model);
 			}
 			model.addAttribute("loginUser", loginUser);
 			return mypage(loginUser, model);
 		} catch (LoginException le) {
 			model.addAttribute("msg", le.getMessage());
-			return "rensou_login";
+			return login(model);
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("msg", "エラーが発生しました");
-			return "rensou_login";
+			return login(model);
 		}
 	}
 
 	@RequestMapping("/doLogout")
-	public String doLogout(SessionStatus sessionStatus) {
+	public String doLogout(SessionStatus sessionStatus, Model model) {
 		sessionStatus.setComplete();
-		return "rensou_top";
+		model.addAttribute("msg", "ログアウトしました");
+		return top();
 	}
 
 	@RequestMapping("/mypage")
@@ -103,7 +117,8 @@ public class RensouController {
 			return login(model);
 		}
 		try {
-			model.addAttribute("json", rensouService.getJsonMySheets(loginUser));
+			String MySheetsJData = rensouService.getMySheetsJData(loginUser);
+			model.addAttribute("json", MySheetsJData);
 			model.addAttribute("sheet", new SheetForm());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -114,7 +129,7 @@ public class RensouController {
 	}
 
 	@RequestMapping("/editAccount")
-	public String doEdit(Model model) {
+	public String editAccount(Model model) {
 		model.addAttribute("user", new UserForm());
 		return "rensou_edit_account";
 	}
@@ -130,7 +145,7 @@ public class RensouController {
 		} catch (EditAccountException eae) {
 			eae.printStackTrace();
 			model.addAttribute("msg", eae.getMessage());
-			return "rensou_edit_account";
+			return editAccount(model);
 		}
 	}
 
@@ -145,7 +160,7 @@ public class RensouController {
 			@ModelAttribute("form") RensouForm rensouForm,
 			Model model) {
 		if (sheet_id != 0) {
-			rensouForm.setSheet_name(rensouService.getSheetNameFormSheetId(sheet_id));
+			rensouForm.setSheet_name(rensouService.getSheetBySheetId(sheet_id).getSheet_name());
 			String json = rensouService.createJsonNodesData(sheet_id);
 			model.addAttribute("json", json);
 		}
@@ -155,11 +170,22 @@ public class RensouController {
 		return "rensougame";
 	}
 
-	@RequestMapping("viewSheet")
+	@RequestMapping("viewSheetNoLogin")
 	public String viewSheet(@RequestParam("sheet_id") int sheet_id, Model model) {
 		String json = rensouService.createJsonNodesData(sheet_id);
 		model.addAttribute("json", json);
-		model.addAttribute("sheet_name", rensouService.getSheetNameFormSheetId(sheet_id));
+		model.addAttribute("sheet", rensouService.getSheetBySheetId(sheet_id));
+		return "rensouview";
+	}
+
+	@RequestMapping("viewSheet")
+	public String viewSheet(@ModelAttribute("loginUser") User loginUser, @RequestParam("sheet_id") int sheet_id,
+			@RequestParam("user_id") int user_id,
+			Model model) {
+		String json = rensouService.createJsonNodesData(sheet_id);
+		model.addAttribute("json", json);
+		model.addAttribute("sheet", rensouService.getSheetBySheetId(sheet_id));
+		model.addAttribute("good_flag", rensouService.checkGood(loginUser.getUser_id(), sheet_id));
 		return "rensouview";
 	}
 
@@ -212,7 +238,7 @@ public class RensouController {
 	@RequestMapping("/public_sheets")
 	public String public_sheets(Model model) {
 		try {
-			model.addAttribute("json", rensouService.getJsonPublicSheets());
+			model.addAttribute("json", rensouService.getPublicSheetsJData());
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("msg", "エラーが発生しました");
@@ -221,4 +247,139 @@ public class RensouController {
 		return "rensou_public_sheets";
 	}
 
+	@RequestMapping("/kanri_top")
+	public String kanri_top(@ModelAttribute("loginManager") User loginManager, Model model) {
+		if (!rensouService.isManager(loginManager)) {
+			return kanri_login(model);
+		}
+		return "kanrisha_top";
+	}
+
+	@RequestMapping("kanri")
+	public String kanri() {
+		return "kanrisha";
+	}
+
+	@RequestMapping("kanri_login")
+	public String kanri_login(Model model) {
+		model.addAttribute("user", new UserForm());
+		return "kanrisha_loign";
+	}
+
+	@RequestMapping(value = "/kanri_doLogin", method = RequestMethod.POST)
+	public String kanri_dologin(@Validated @ModelAttribute(name = "user") UserForm form, BindingResult bindingResult,
+			Model model) {
+		try {
+			User loginManager = rensouService.doLogin(form);
+			if (loginManager == null) {
+				model.addAttribute("msg", "パスワードが違います");
+				return kanri_login(model);
+			}
+			if (loginManager.getUser_role() != 9) {
+				System.out.println("管理者ではないユーザーが管理者としてログインしようとしました。");
+				model.addAttribute("msg", "ログインに失敗しました。");
+				return login(model);
+			}
+			model.addAttribute("loginManager", loginManager);
+			return kanri_top(loginManager, model);
+		} catch (LoginException le) {
+			model.addAttribute("msg", le.getMessage());
+			return kanri_login(model);
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("msg", "エラーが発生しました");
+			return kanri_login(model);
+		}
+	}
+
+	@RequestMapping("/kanri_doLogout")
+	public String kanri_doLogout(SessionStatus sessionStatus, Model model) {
+		sessionStatus.setComplete();
+		model.addAttribute("msg", "ログアウトしました");
+		return kanri_login(model);
+	}
+
+	@RequestMapping("kanri_newAccount")
+	public String kanri_newAccount(@ModelAttribute("loginManager") User loginManager,
+			Model model) {
+		if (!rensouService.isManager(loginManager)) {
+			return kanri_login(model);
+		}
+		model.addAttribute("user", new UserForm());
+		return "kanrisha_newAccount";
+	}
+
+	@RequestMapping("kanri_doCreateAccount") //@ModelAttribute("loginManager") User loginManager,//←引数に記述したらログイン情報が入力値で上書きされた
+	public String kanri_doCreateAccount(@Validated @ModelAttribute(name = "user") UserForm form,
+			BindingResult bindingResult, Model model) {
+		try {
+			if (bindingResult.hasErrors()) {
+				model.addAttribute("msg", "入力情報にエラーがあります");
+				return "kanrisha_newAccount";
+			}
+			rensouService.kanri_doCreateAccount(form);
+			model.addAttribute("msg", "アカウントを作成しました！");
+			return "kanrisha_top";// kanri_top(loginManager, model);
+		} catch (CreateAccountException cae) {
+			model.addAttribute("msg", cae.getMessage());
+			return "kanrisha_top";// kanri_newAccount(loginManager, model);
+		} catch (LoginException le) {
+			model.addAttribute("msg", le.getMessage());
+			return "kanrisha_top";// kanri_newAccount(loginManager, model);
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("msg", "エラーが発生しました");
+			return "kanrisha_top"; //kanri_newAccount(loginManager, model);
+		}
+	}
+
+	@RequestMapping("stopOpenPublic")
+	public String stopOpenPublic(@ModelAttribute("loginManager") User loginManager,
+			@RequestParam("sheet_id") int sheet_id, Model model) {
+		if (!rensouService.isManager(loginManager)) {
+			return kanri_login(model);
+		}
+		rensouService.stopOpenPublic(sheet_id);
+		model.addAttribute("msg", sheet_id + "を公開禁止にしました");
+		return public_sheets(model);
+	}
+
+	@RequestMapping("allowOpenPublic")
+	public String allowOpenPublic(@ModelAttribute("loginManager") User loginManager,
+			@RequestParam("sheet_id") int sheet_id, Model model) {
+		if (!rensouService.isManager(loginManager)) {
+			return kanri_login(model);
+		}
+		rensouService.allowOpenPublic(sheet_id);
+		model.addAttribute("msg", sheet_id + "を公開可能にしました");
+		return stoped_sheets(model);
+	}
+
+	@RequestMapping("stoped_sheets")
+	public String stoped_sheets(Model model) {
+		try {
+			model.addAttribute("json", rensouService.gerStoppedSheetsJData());
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("msg", "エラーが発生しました");
+			return top();
+		}
+		return "kanrisha_stopped_sheets";
+	}
+
+	@RequestMapping("addGood")
+	public String addGood(@RequestParam("sheet_id") Integer sheet_id, @RequestParam("user_id") Integer user_id,
+			Model model) {
+		rensouService.addGood(user_id, sheet_id);
+		model.addAttribute("msg", "いいねしました！");
+		return public_sheets(model);
+	}
+
+	@RequestMapping("cancelGood")
+	public String cancelGood(@RequestParam("sheet_id") Integer sheet_id, @RequestParam("user_id") Integer user_id,
+			Model model) {
+		rensouService.cancelGood(user_id, sheet_id);
+		model.addAttribute("msg", "いいねを取り消しました");
+		return public_sheets(model);
+	}
 }

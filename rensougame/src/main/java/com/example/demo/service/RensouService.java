@@ -19,11 +19,18 @@ import com.example.demo.exception.LoginException;
 import com.example.demo.exception.SwitchPublicFlagException;
 
 @Service
+//@Transactional //neo4jへのアクセスが起きてエラー
 public class RensouService {
 
 	@Autowired
 	private RensouDao rensouDao;
 
+	/**
+	 * 引数のUserFormをDAOに渡すメソッドです。
+	 * DAOではUserFormの情報をもとに新規アカウントを作成します。
+	 * @param userform
+	 * @throws Exception
+	 */
 	public void doCreateAccount(UserForm userform) throws Exception {
 		try {
 			rensouDao.doCreateAccount(userform);
@@ -33,6 +40,13 @@ public class RensouService {
 		}
 	}
 
+	/**
+	 * 引数のUserFormをDAOに渡すメソッドです。
+	 * DAOでUserFormの情報をもとにログイン処理をし、ログインできたユーザーをUserインスタンスで返します。
+	 * @param userform
+	 * @return
+	 * @throws Exception
+	 */
 	public User doLogin(UserForm userform) throws Exception {
 		try {
 			return rensouDao.doLogin(userform);
@@ -55,32 +69,86 @@ public class RensouService {
 		return rensouDao.refleshLoginUser(loginUser);
 	}
 
-	public String getJsonMySheets(User loginUser) {
-		List<Sheet> sheetList = rensouDao.getSheetList(loginUser.getUser_id());
-		return createJsonSheetsData(sheetList);
+	/**
+	 * SheetのListをJSON文字列表現に変換するメソッドです。
+	 * 引数のListのSheetはsheet_name,sheet_id,public_flagに値が入っている必要があります。
+	 * @param sheetList
+	 * @return	引数のSheetのListのJSON文字列表現
+	 */
+	public String createSheetsJData(List<Sheet> sheetList) {
+		if (sheetList.size() == 0) {
+			return null;
+		}
+		if ((sheetList.get(0).getUser_id()) == null) {
+			String json = "{\"sheet_list\":[";
+			for (int i = 0; i < sheetList.size(); i++) {
+				json = json + " { "
+						+ " \"sheet_name\" : \"" + sheetList.get(i).getSheet_name()
+						+ "\" , \"sheet_id\" : \"" + sheetList.get(i).getSheet_id()
+						+ "\" , \"public_flag\" : " + sheetList.get(i).getPublic_flag()
+						+ " } ";
+				if (i != sheetList.size() - 1) {
+					json = json + ",";
+				}
+			}
+			json = json + "]}";
+			return json;
+		} else if ((sheetList.get(0).getGood_count()) != null) {
+			String json = "{\"sheet_list\":[";
+			for (int i = 0; i < sheetList.size(); i++) {
+				String user_name = rensouDao.getUserNameByUserId(sheetList.get(i).getUser_id());
+				json = json + " { "
+						+ " \"user_name\" : \"" + user_name
+						+ "\" , \"sheet_name\" : \"" + sheetList.get(i).getSheet_name()
+						+ "\" , \"sheet_id\" : " + sheetList.get(i).getSheet_id()
+						+ " , \"public_flag\" : " + sheetList.get(i).getPublic_flag()
+						+ " , \"good_count\" : " + sheetList.get(i).getGood_count()
+						+ " } ";
+				if (i != sheetList.size() - 1) {
+					json = json + ",";
+				}
+			}
+			json = json + "]}";
+			return json;
+		} else {
+			String json = "{\"sheet_list\":[";
+			for (int i = 0; i < sheetList.size(); i++) {
+				String user_name = rensouDao.getUserNameByUserId(sheetList.get(i).getUser_id());
+				json = json + " { "
+						+ " \"user_name\" : \"" + user_name
+						+ "\" , \"sheet_name\" : \"" + sheetList.get(i).getSheet_name()
+						+ "\" , \"sheet_id\" : " + sheetList.get(i).getSheet_id()
+						+ " , \"public_flag\" : " + sheetList.get(i).getPublic_flag()
+						+ " } ";
+				if (i != sheetList.size() - 1) {
+					json = json + ",";
+				}
+			}
+			json = json + "]}";
+			return json;
+		}
 	}
 
-	public String createJsonSheetsData(List<Sheet> sheetList) {
-		String json = "{\"sheet_list\":[";
-		for (int i = 0; i < sheetList.size(); i++) {
-			json = json + " { "
-					+ " \"sheet_name\" : \"" + sheetList.get(i).getSheet_name()
-					+ "\" , \"sheet_id\" : \"" + sheetList.get(i).getSheet_id()
-					+ "\" , \"public_flag\" : " + sheetList.get(i).getPublic_flag()
-					+ " } ";
-			if (i != sheetList.size() - 1) {
-				json = json + ",";
+	public String getMySheetsJData(User loginUser) {
+		List<Sheet> sheetList = rensouDao.getSheetList(loginUser.getUser_id());
+		return createSheetsJData(sheetList);
+	}
+
+	public String getPublicSheetsJData() {
+		List<Sheet> sheetList = rensouDao.getPublicSheets();
+		if (sheetList != null) {
+			for (int i = 0; i < sheetList.size(); i++) {
+				sheetList.get(i).setGood_count(countGood(sheetList.get(i).getSheet_id()));
 			}
 		}
-		json = json + "]}";
-		return json;
+		return createSheetsJData(sheetList);
 	}
 
-	/**
-	 * シートを新規作成/保存するメソッドです。
-	 * 既存のシートの場合は保存のみを行います。
-	 * @param rensouForm
-	 */
+	public String gerStoppedSheetsJData() {
+		List<Sheet> sheetList = rensouDao.getStoppedSheets();
+		return createSheetsJData(sheetList);
+	}
+
 	public void saveSheet(RensouForm rensouForm) throws Exception {
 		if (rensouForm.getSheet_id() == 0) {
 			rensouForm.setSheet_id(rensouDao.createSheet(rensouForm));
@@ -109,15 +177,6 @@ public class RensouService {
 			rensouDao.updateNodes(eNodeList);
 		}
 	}
-	//
-	//	public void updateSheetName(RensouForm rensouForm) throws Exception {
-	//		try {
-	//			rensouDao.updateSheetName(rensouForm);
-	//		} catch (Exception e) {
-	//			e.printStackTrace();
-	//			throw new RuntimeException();
-	//		}
-	//	}
 
 	public String createJsonNodesData(int sheet_id) {
 		List<Node> eNodeList = rensouDao.openSheet(sheet_id);
@@ -135,8 +194,8 @@ public class RensouService {
 		return json;
 	}
 
-	public String getSheetNameFormSheetId(int sheet_id) {
-		return rensouDao.getSheetNameFormSheetId(sheet_id);
+	public Sheet getSheetBySheetId(int sheet_id) {
+		return rensouDao.getSheetBySheetId(sheet_id);
 	}
 
 	public List<Sheet> getSheetList(User loginUser) throws Exception {
@@ -163,22 +222,78 @@ public class RensouService {
 		return sheetForm;
 	}
 
-	public String getJsonPublicSheets() {
-		List<Sheet> sheetList = rensouDao.getPublicSheets();
-		String json = "{\"sheet_list\":[";
-		for (int i = 0; i < sheetList.size(); i++) {
-			String user_name = rensouDao.getUserNameByUserId(sheetList.get(i).getUser_id());
-			json = json + " { "
-					+ " \"user_name\" : \"" + user_name
-					+ "\" , \"sheet_name\" : \"" + sheetList.get(i).getSheet_name()
-					+ "\" , \"sheet_id\" : " + sheetList.get(i).getSheet_id()
-					+ " } ";
-			if (i != sheetList.size() - 1) {
-				json = json + ",";
+	public String getJsonPublicSheets(User loginUser) {
+		List<Sheet> sheetList = rensouDao.getSheetList(loginUser.getUser_id());
+		return createSheetsJData(sheetList);
+	}
+
+	public void kanri_doCreateAccount(UserForm userform) throws Exception {
+		try {
+			rensouDao.kanri_doCreateAccount(userform);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CreateAccountException();
+		}
+	}
+
+	public boolean isManager(User loginUser) {
+		try {
+			if (loginUser.getUser_role() != 9) {
+				System.out.println("管理者ではないユーザーが管理者専用ページにアクセスしました");
+				return false;
+			}
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public void stopOpenPublic(int sheet_id) {
+		rensouDao.stopOpenPublic(sheet_id);
+	}
+
+	public void allowOpenPublic(int sheet_id) {
+		rensouDao.allowOpenPublic(sheet_id);
+	}
+
+	public void addGood(int user_id, int sheet_id) {
+		rensouDao.addGood(user_id, sheet_id);
+	}
+
+	public void cancelGood(int user_id, int sheet_id) {
+		rensouDao.cancelGood(user_id, sheet_id);
+	}
+
+	public int countGood(int sheet_id) {
+		List<Sheet> list = rensouDao.likedUsers(sheet_id);
+		int good_count = 0;
+		for (int i = 0; i < list.size(); i++) {
+			if (list.get(i).getUser_id() != null) {
+				good_count++;
 			}
 		}
-		json = json + "]}";
-		return json;
+		return good_count;
+	}
+
+	public int checkGood(int user_id, int sheet_id) {//なにかおかしい likedUsersの使い方がおかしいかも
+		List<Sheet> list = rensouDao.likedUsers(sheet_id);
+		int good_flag = 0;
+		try {
+			if (list == null) {
+				return 0;
+			}
+			for (int i = 0; i < list.size(); i++) {
+				if (list.get(i).getUser_id() == user_id) {
+					good_flag = 1;
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
+		return good_flag;
 	}
 
 }

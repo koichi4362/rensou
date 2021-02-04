@@ -6,9 +6,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>新規登録-連想ゲーム</title>
+<title>新規登録 - 連想ゲーム</title>
 <link rel="stylesheet" href="resources/css/rensoug-page.css"></link>
 <link rel="stylesheet" href="resources/css/rensoug-form.css"></link>
+<script src="resources/js/form.js"></script>
 </head>
 <body>
 	<%@include file="rensou_header.jsp"%>
@@ -16,26 +17,27 @@
 	<main>
 		<div>
 			<h1>ユーザー新規登録</h1>
-			<c:if test="${not empty msg}">
-				<p>${msg}</p>
-			</c:if>
 			<div class="form">
 				<form:form action="doCreateAccount" modelAttribute="user"
 					method="POST">
 					<p class="koumoku">
 						ユーザー名
 						<form:input path="user_name" />
+						<form:errors path="user_name" cssStyle="color: red" />
 					</p>
 					<p class="koumoku">
 						メールアドレス
 						<form:input path="e_mail" />
+						<form:errors path="e_mail" cssStyle="color: red" />
 					</p>
 					<p class="koumoku">
 						パスワード
-						<form:password path="passwd" />
+						<form:password path="passwd" oninput="CheckPassword(this)" />
+						<form:errors path="passwd" cssStyle="color: red" />
 					</p>
 					<p class="koumoku">
-						パスワード(確認) <input type="password" name="passwd2">
+						パスワード(確認) <input type="password" name="passwd2"
+							oninput="Check2ndPassword(this)">
 					</p>
 					<!--javascriptで再入力のチェック-->
 					<p>
