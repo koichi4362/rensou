@@ -14,7 +14,7 @@ function Check2ndPassword(passwd2) {
 	let input2 = passwd2.value;
 	// パスワード比較
 	if (input1 != input2) {
-		passwd2.setCustomValidity("入力値が一致しません。");
+		passwd2.setCustomValidity("入力値が一致しません");
 	} else {
 		passwd2.setCustomValidity('');
 	}

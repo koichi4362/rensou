@@ -276,7 +276,7 @@ public class RensouService {
 		return good_count;
 	}
 
-	public int checkGood(int user_id, int sheet_id) {//なにかおかしい likedUsersの使い方がおかしいかも
+	public int checkGood(int user_id, int sheet_id) {
 		List<Sheet> list = rensouDao.likedUsers(sheet_id);
 		int good_flag = 0;
 		try {

@@ -318,7 +318,7 @@ public class RensouController {
 				return "kanrisha_newAccount";
 			}
 			rensouService.kanri_doCreateAccount(form);
-			model.addAttribute("msg", "アカウントを作成しました！");
+			model.addAttribute("msg", "管理アカウントを作成しました！");
 			return "kanrisha_top";// kanri_top(loginManager, model);
 		} catch (CreateAccountException cae) {
 			model.addAttribute("msg", cae.getMessage());
@@ -340,7 +340,7 @@ public class RensouController {
 			return kanri_login(model);
 		}
 		rensouService.stopOpenPublic(sheet_id);
-		model.addAttribute("msg", sheet_id + "を公開禁止にしました");
+		model.addAttribute("msg", rensouService.getSheetBySheetId(sheet_id).getSheet_name() + "を公開禁止にしました");
 		return public_sheets(model);
 	}
 
@@ -351,7 +351,7 @@ public class RensouController {
 			return kanri_login(model);
 		}
 		rensouService.allowOpenPublic(sheet_id);
-		model.addAttribute("msg", sheet_id + "を公開可能にしました");
+		model.addAttribute("msg", rensouService.getSheetBySheetId(sheet_id).getSheet_name() + "を公開可能にしました");
 		return stoped_sheets(model);
 	}
 

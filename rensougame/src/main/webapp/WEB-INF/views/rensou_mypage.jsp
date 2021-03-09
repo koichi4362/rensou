@@ -30,7 +30,7 @@
 					<a href="editAccount">アカウントの編集</a>
 				</div>
 				<div class="button">
-					<a href="logout">ログアウト</a>
+					<a href="doLogout">ログアウト</a>
 				</div>
 				<br />
 			</div>
