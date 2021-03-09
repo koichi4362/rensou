@@ -29,7 +29,7 @@ public class RensouController {
 	@Autowired
 	private RensouService rensouService;
 
-	@RequestMapping({"/top" , "/rensou"})
+	@RequestMapping({"/top" , "/"})
 	public String top() {
 		return "rensou_top";
 	}
