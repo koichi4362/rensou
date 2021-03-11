@@ -8,7 +8,7 @@
 <title>マイページ - 連想ゲーム</title>
 <link rel="stylesheet" href="resources/css/rensoug-page.css"></link>
 <link rel="stylesheet" href="resources/css/rensoug-mypage.css"></link>
-<script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="resources/js/mypage.js"></script>
 <script>
 	var json = '${json}';

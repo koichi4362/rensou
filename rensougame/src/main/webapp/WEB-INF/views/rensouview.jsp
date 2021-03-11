@@ -8,7 +8,7 @@
 <meta charset="UTF-8">
 <title>連想ゲーム - 閲覧</title>
 <link rel="stylesheet" href="resources/css/rensouview.css"></link>
-<script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="resources/js/rensouview.js"></script>
 <script>
 	var json = '${json}';

@@ -8,7 +8,7 @@
 <title>公開禁止シート一覧 - 連想ゲーム(管理)</title>
 <link rel="stylesheet" href="resources/css/rensoug-page.css"></link>
 <link rel="stylesheet" href="resources/css/rensoug-public.css"></link>
-<script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="resources/js/public_sheets.js"></script>
 <script>
 	var json = '${json}';
