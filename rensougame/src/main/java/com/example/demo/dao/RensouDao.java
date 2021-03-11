@@ -207,7 +207,7 @@ public class RensouDao {
 	 */
 	public List<Sheet> getSheetList(int user_id) {
 		MapSqlParameterSource param = new MapSqlParameterSource();
-		String getSheetListSql = "SELECT sheet_id , user_id , sheet_name , public_flag FROM sheets WHERE user_id = :user_id ORDER BY created_at";
+		String getSheetListSql = "SELECT sheet_id , user_id , sheet_name , public_flag FROM sheets WHERE user_id = :user_id ORDER BY created_date";
 		param.addValue("user_id", user_id);
 		return jdbcTemplate.query(getSheetListSql, param, new BeanPropertyRowMapper<Sheet>(Sheet.class));
 	}
