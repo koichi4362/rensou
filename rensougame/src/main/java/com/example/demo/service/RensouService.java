@@ -19,7 +19,7 @@ import com.example.demo.exception.LoginException;
 import com.example.demo.exception.SwitchPublicFlagException;
 
 @Service
-//@Transactional //neo4jへのアクセスが起きてエラー
+@Transactional
 public class RensouService {
 
 	@Autowired
