@@ -8,6 +8,7 @@ public class User {
 	private String e_mail;
 	private String passwd;
 	private String user_role;
+	private String token;
 
 	public User() {
 	}
@@ -55,4 +56,13 @@ public class User {
 	public void setUser_role(String user_role) {
 		this.user_role = user_role;
 	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
 }

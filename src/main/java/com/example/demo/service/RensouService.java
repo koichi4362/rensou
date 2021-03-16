@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -297,4 +298,16 @@ public class RensouService {
 		return good_flag;
 	}
 
+	public String createToken() {
+		String token = UUID.randomUUID().toString();
+		return token;
+	}
+
+	public boolean checkToken(String sessionToken, String pageToken) {
+		if (sessionToken.equals(pageToken)
+				&& sessionToken != null) {
+			return true;
+		}
+		return false;
+	}
 }

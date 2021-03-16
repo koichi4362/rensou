@@ -14,6 +14,8 @@ public class UserForm {
 	@NotBlank(message = "パスワードは必須です")
 	private String passwd;
 
+	private String token;
+
 	public String getUser_name() {
 		return user_name;
 	}
@@ -38,4 +40,11 @@ public class UserForm {
 		this.passwd = passwd;
 	}
 
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
 }

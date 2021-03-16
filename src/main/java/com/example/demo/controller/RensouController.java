@@ -29,7 +29,7 @@ public class RensouController {
 	@Autowired
 	private RensouService rensouService;
 
-	@RequestMapping({"/top" , "/"})
+	@RequestMapping({ "/top", "/" })
 	public String top() {
 		return "rensou_top";
 	}
@@ -129,8 +129,12 @@ public class RensouController {
 	}
 
 	@RequestMapping("/editAccount")
-	public String editAccount(Model model) {
-		model.addAttribute("user", new UserForm());
+	public String editAccount(Model model, User loginUser) {
+		String token = rensouService.createToken();
+		loginUser.setToken(token);
+		UserForm userForm = new UserForm();
+		userForm.setToken(token);
+		model.addAttribute("user", userForm);
 		return "rensou_edit_account";
 	}
 
@@ -138,14 +142,19 @@ public class RensouController {
 	public String doEditAccount(@ModelAttribute(name = "user") UserForm form,
 			@ModelAttribute(name = "loginUser") User loginUser, Model model) {
 		try {
+			if (!rensouService.checkToken(form.getToken(), loginUser.getToken())) {
+				model.addAttribute("msg", "変更が正常に処理できませんでした。もう一度お試しください");
+				return top();
+			}
 			rensouService.doEditAccount(form, loginUser);
 			model.addAttribute("loginUser", rensouService.refreshLoginUser(loginUser));
 			model.addAttribute("msg", "アカウント情報を変更しました！");
+			loginUser.setToken(null);
 			return mypage(loginUser, model);
 		} catch (EditAccountException eae) {
 			eae.printStackTrace();
 			model.addAttribute("msg", eae.getMessage());
-			return editAccount(model);
+			return editAccount(model, loginUser);
 		}
 	}
 

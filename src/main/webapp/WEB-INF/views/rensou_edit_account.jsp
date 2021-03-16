@@ -21,6 +21,7 @@
 	</c:if>
 	<div class="form">
 		<form:form action="doEditAccount" modelAttribute="user" method="POST">
+			<form:input type="hidden" path="token" />
 			<p class="koumoku">
 				ユーザー名
 				<form:input path="user_name" />
