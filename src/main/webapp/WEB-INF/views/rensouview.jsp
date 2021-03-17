@@ -60,7 +60,7 @@
 						<c:otherwise>
 							<div>
 								<button type="button"
-									onclick="location.href='cancelGood?sheet_id=${sheet.sheet_id }&user_id=${sessionScope.loginUser.user_id }'">キャンセル</button>
+									onclick="location.href='cancelGood?sheet_id=${sheet.sheet_id }&user_id=${sessionScope.loginUser.user_id }'">いいね取り消し</button>
 							</div>
 						</c:otherwise>
 					</c:choose>

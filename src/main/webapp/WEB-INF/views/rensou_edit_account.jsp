@@ -9,7 +9,7 @@
 <title>アカウント編集-連想ゲーム</title>
 <link rel="stylesheet" href="resources/css/rensoug-page.css"></link>
 <link rel="stylesheet" href="resources/css/rensoug-form.css"></link>
-<script src="resources/js/form.js"></script>
+<script src="resources/js/edit_account_form.js"></script>
 </head>
 <body>
 	<%@include file="rensou_header.jsp"%>

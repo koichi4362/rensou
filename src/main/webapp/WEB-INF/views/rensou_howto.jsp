@@ -15,7 +15,7 @@
 		<div class="contents clearfix">
 			<h1>～遊び方～</h1>
 			<div>
-				<img src="resources/images/screenshot1.jpg" class="ss">・シートを選択しゲームが始まったら、始めに＋ボタンをクリックしましょう。
+				<img src="resources/images/screenshot1.jpg" class="ss">・ゲームが始まったら、始めに＋ボタンをクリックしましょう。
 			</div>
 			<div>
 				<img src="resources/images/screenshot2.jpg" class="ss">・文字を入力するボックスが出てくるので、好きな言葉を入力してみてください。
