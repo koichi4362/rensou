@@ -29,7 +29,7 @@
 						<button>ログイン</button>
 					</p>
 					<p>
-						または... <a href="rensou_newaccount.jsp">新規登録</a>
+						または... <a href="createAccount">新規登録</a>
 					</p>
 				</form:form>
 			</div>
