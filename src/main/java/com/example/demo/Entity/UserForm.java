@@ -21,7 +21,7 @@ public class UserForm {
 	}
 
 	public void setUser_name(String user_name) {
-		this.user_name = user_name;
+		this.user_name = user_name.trim();
 	}
 
 	public String getE_mail() {
@@ -29,7 +29,7 @@ public class UserForm {
 	}
 
 	public void setE_mail(String e_mail) {
-		this.e_mail = e_mail;
+		this.e_mail = e_mail.trim();
 	}
 
 	public String getPasswd() {
@@ -37,7 +37,7 @@ public class UserForm {
 	}
 
 	public void setPasswd(String passwd) {
-		this.passwd = passwd;
+		this.passwd = passwd.trim();
 	}
 
 	public String getToken() {
