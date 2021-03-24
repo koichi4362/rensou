@@ -72,7 +72,7 @@ public class RensouDao {
 				editPart1 = editPart1 + " , ";
 			}
 			editPart1 = editPart1.concat(" e_mail = :e_mail ");
-			param.addValue("e_mail", form.getUser_name());
+			param.addValue("e_mail", form.getE_mail());
 			commaFlag = true;
 		}
 		if (!form.getPasswd().trim().isEmpty()) {

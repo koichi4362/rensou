@@ -9,8 +9,10 @@ import org.springframework.stereotype.Component;
 public class UserForm {
 	@NotBlank(message = "名前は必須です")
 	private String user_name;
+
 	@Email(message = "メールアドレスは必須です")
 	private String e_mail;
+
 	@NotBlank(message = "パスワードは必須です")
 	private String passwd;
 
