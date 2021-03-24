@@ -6,3 +6,12 @@ function CheckPassword(passwd) {
 		passwd.setCustomValidity('');
 	}
 }
+
+function CheckEmail(email) {
+	let input = email.value;
+	if (input.indexOf('@') === -1) {
+		email.setCustomValidity("この欄にはEメールアドレスを入力してください");
+	} else {
+		email.setCustomValidity('');
+	}
+}

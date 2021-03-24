@@ -29,7 +29,7 @@
 			</p>
 			<p class="koumoku">
 				メールアドレス
-				<form:input path="e_mail" />
+				<form:input path="e_mail" oninput="CheckEmail(this)"/>
 				<form:errors path="e_mail" cssStyle="color: red" />
 			</p>
 			<p class="koumoku">
