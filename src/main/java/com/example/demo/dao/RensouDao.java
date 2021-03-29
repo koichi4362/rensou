@@ -109,7 +109,7 @@ public class RensouDao {
 		MapSqlParameterSource param = new MapSqlParameterSource();
 		String createSheetSql = "INSERT INTO sheets(user_id , sheet_name) VALUES( :user_id , :sheet_name )";
 		param.addValue("user_id", rensouForm.getUser_id());
-		param.addValue("sheet_name", "新しいシート");
+		param.addValue("sheet_name", rensouForm.getSheet_name());
 		jdbcTemplate.update(createSheetSql, param);
 
 		String findNewSheet = "SELECT MAX(sheet_id)AS sheet_id FROM sheets";

@@ -12,6 +12,27 @@ function openSheet(json) {
 	});
 }
 
+//シート名編集モードへ
+function changeSheetName(changeTo) {
+	if (changeTo == '編集') {
+		$('#changeSheetNameButton').hide();
+		$('#sheetNameInputDiv').show();
+	}
+	else {
+		$('#changeSheetNameButton').show();
+		$('#sheetNameInputDiv').hide();
+		alert('シート名の変更は連想ボックスを保存を押すと一緒に保存されます。');
+	}
+}
+
+
+//シート名変更
+function updateSheetName(input) {
+	let inputSheetName = input.value;
+	document.getElementById("sheetName").text = inputSheetName;
+	document.getElementById("sheetNameForm").value = inputSheetName;
+}
+
 //ボックス追加
 let newNodeCount = 0;
 $(function() {

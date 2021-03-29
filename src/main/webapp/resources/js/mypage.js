@@ -1,6 +1,4 @@
 
-
-
 //シート一覧表示
 function getMySheet(json) {
 	$(window).on("load", function() {
@@ -16,9 +14,9 @@ function getMySheet(json) {
 			sheetNameForm.children('.buttonOfSheet').children('.sheetNameBtn').attr('id', 'sheetNameBtn' + id);
 			sheetNameForm.children('.buttonOfSheet').children('.switchPublicBtn').attr('id', 'switchPublicBtn' + id);
 			sheetNameForm.children('.buttonOfUpdateSheetName').attr('id', 'buttonOfUpdateSheetName' + id);
-			if (sheetList[i].public_flag === 1)  {
+			if (sheetList[i].public_flag === 1) {
 				$('#switchPublicBtn' + id).text("公開中止");
-			}else{
+			} else {
 				$('#switchPublicBtn' + id).text("公開する");
 			}
 		}
@@ -42,22 +40,3 @@ function cancelUpdateName() {
 	$('.buttonOfSheet').show();
 	$('.buttonOfUpdateSheetName').hide();
 }
-
-
-
-//$(function() {
-//	$(window).on("load", function() {
-//		$.ajax({
-//			url: '/rensougame/getMySheets',
-//			type: 'POST',
-//			dataType: "json",
-//			success: function(data) {
-//				for (var i = 0; i < data.length; i++) {
-//					$('#sheet').clone().insertBefore('#sheet').attr('id', 'sheet' + i).removeAttr('hidden');
-//					$('#sheet' + i).children('a').attr('href', "openSheetGame?sheet_id=" + data[i].sheet_id);
-//					$('#sheet' + i).children('a').text(data[i].sheet_name);
-//				}
-//			}
-//		})
-//	});
-//});

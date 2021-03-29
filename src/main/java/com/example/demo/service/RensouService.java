@@ -152,6 +152,7 @@ public class RensouService {
 	}
 
 	public void saveSheet(RensouForm rensouForm) throws Exception {
+		rensouDao.updateSheetName(rensouForm);
 		if (rensouForm.getSheet_id() == 0) {
 			rensouForm.setSheet_id(rensouDao.createSheet(rensouForm));
 		}
