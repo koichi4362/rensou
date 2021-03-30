@@ -34,10 +34,13 @@
 				<button id="changeSheetNameButton" class="sheetNameBtn"
 					type="button" onClick="changeSheetName('編集')">シート名変更</button>
 				<div style="display: none;" id="sheetNameInputDiv">
-					<input type="text" id="sheetNameInput" onKeyUp="updateSheetName(this)"
+					<input type="text" id="sheetNameInput"
+						onKeyUp="updateSheetName(this)"
 						value=${not empty rensou.sheet_name ? rensou.sheet_name : "新しいシート" }>
 					<button onClick="changeSheetName()">決定</button>
 				</div>
+				<button id="deleteSheetButton"
+					onClick='confirmDelete(${rensou.sheet_id})'>シートを削除</button>
 			</div>
 		</c:if>
 	</div>

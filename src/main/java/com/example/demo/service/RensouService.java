@@ -208,6 +208,10 @@ public class RensouService {
 		return rensouDao.getSheetList(loginUser.getUser_id());
 	}
 
+	public void deleteSheet(int sheet_id) {
+		rensouDao.deleteThisSheet(sheet_id);
+	}
+
 	public void updateSheetName(SheetForm sheetForm) {
 		rensouDao.updateSheetName(sheetForm);
 	}

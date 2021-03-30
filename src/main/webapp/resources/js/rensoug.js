@@ -44,6 +44,13 @@ $(function() {
 	});
 });
 
+//シート削除
+function confirmDelete(sheet_id) {
+	let url = "deleteSheet?sheet_id=" + sheet_id;
+	if (confirm('削除すると元に戻せません\n本当にこのシートを削除しますか？')) {
+		location = url;
+	}
+}
 
 
 //$(function() {

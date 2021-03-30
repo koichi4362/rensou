@@ -174,6 +174,15 @@ public class RensouDao {
 		}
 	}
 
+	public void deleteThisSheet(int sheet_id) {
+		String deleteSheetSql = "DELETE FROM good_sheets WHERE sheet_id = :sheet_id;"
+				+ "DELETE FROM nodes WHERE sheet_id = :sheet_id;"
+				+ "DELETE FROM sheets WHERE sheet_id = :sheet_id;";
+		MapSqlParameterSource param = new MapSqlParameterSource();
+		param.addValue("sheet_id", sheet_id);
+		jdbcTemplate.update(deleteSheetSql, param);
+	}
+
 	/**
 	 * sheet_idをもとにシートを展開するメソッドです。
 	 * @param sheet_id

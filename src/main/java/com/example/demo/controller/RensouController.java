@@ -213,6 +213,14 @@ public class RensouController {
 		}
 	}
 
+	@RequestMapping("/deleteSheet")
+	public String deleteSheet(@RequestParam("sheet_id") Integer sheet_id, @ModelAttribute("loginUser") User loginUser,
+			Model model) {
+		rensouService.deleteSheet(sheet_id);
+		model.addAttribute("msg", "シートを削除しました。");
+		return mypage(loginUser, model);
+	}
+
 	@RequestMapping("/updateSheetName")
 	public String updateSheetName(@ModelAttribute("sheet") SheetForm sheetForm,
 			@ModelAttribute("loginUser") User loginUser, Model model) {

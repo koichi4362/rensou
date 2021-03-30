@@ -15,6 +15,15 @@ body {
 	margin: 0 15px;
 }
 
+#deleteSheetButton {
+	float: right;
+	text-decoration: none;
+	border: 2px red solid;
+	border-radius: 5px;
+	background-color: #e5e5e5;
+	color:black;
+}
+
 .common {
 	float: left;
 }
