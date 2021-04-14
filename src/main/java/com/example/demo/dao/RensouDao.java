@@ -122,6 +122,9 @@ public class RensouDao {
 	 * @param rensouForm
 	 */
 	public void updateSheetName(RensouForm rensouForm) {
+		if (rensouForm.getSheet_name().isEmpty()) {
+			rensouForm.setSheet_name("新しいシート");
+		}
 		String updateSheetName = "UPDATE sheets SET sheet_name = :sheet_name WHERE sheet_id = :sheet_id";
 		MapSqlParameterSource param = new MapSqlParameterSource();
 		param.addValue("sheet_name", rensouForm.getSheet_name());
